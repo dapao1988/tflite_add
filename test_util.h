@@ -19,8 +19,8 @@ limitations under the License.
 #include <complex>
 #include <vector>
 
-#include <gmock/gmock.h>
-#include <gtest/gtest.h>
+//#include <gmock/gmock.h>
+//#include <gtest/gtest.h>
 #include "tensorflow/core/platform/logging.h"
 #include "tensorflow/lite/interpreter.h"
 #include "tensorflow/lite/kernels/internal/tensor_utils.h"
@@ -32,6 +32,7 @@ limitations under the License.
 
 namespace tflite {
 
+#if GOOGLE_TEST
 // A gmock matcher that check that elements of a float vector match to a given
 // tolerance.
 std::vector<::testing::Matcher<float>> ArrayFloatNear(
@@ -41,6 +42,7 @@ std::vector<::testing::Matcher<float>> ArrayFloatNear(
 // tolerance.
 std::vector<::testing::Matcher<std::complex<float>>> ArrayComplex64Near(
     const std::vector<std::complex<float>>& values, float max_abs_error = 1e-5);
+#endif
 
 template <typename T>
 inline std::vector<T> Quantize(const std::vector<float>& data, float scale,
@@ -574,6 +576,7 @@ class SingleOpModel {
 //   function.
 // * Call GetRegistration to get the TfLiteRegistration to be used before
 //   building the interpreter.
+#if GOOGLE_TEST
 class SingleOpTest : public ::testing::TestWithParam<string> {
  public:
   static std::vector<string> GetKernelTags(
@@ -591,6 +594,7 @@ class SingleOpTest : public ::testing::TestWithParam<string> {
     return GetKernelMap().at(GetParam());
   }
 };
+#endif
 
 // Returns the corresponding TensorType given the type T.
 template <typename T>

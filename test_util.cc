@@ -12,7 +12,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
+#if GOOGLE_TEST
 #include "tensorflow/lite/kernels/test_util.h"
+#else
+#include "test_util.h"
+#include <assert.h>
+#endif
 
 #include "tensorflow/core/platform/logging.h"
 #include "tensorflow/lite/delegates/nnapi/nnapi_delegate.h"
@@ -20,8 +25,10 @@ limitations under the License.
 
 namespace tflite {
 
+#if GOOGLE_TEST
 using ::testing::FloatNear;
 using ::testing::Matcher;
+#endif
 
 namespace {
 
@@ -43,6 +50,7 @@ TfLiteDelegate* TestNnApiDelegate() {
 
 }  // namespace
 
+#if GOOGLE_TEST
 std::vector<Matcher<float>> ArrayFloatNear(const std::vector<float>& values,
                                            float max_abs_error) {
   std::vector<Matcher<float>> matchers;
@@ -66,6 +74,7 @@ std::vector<Matcher<std::complex<float>>> ArrayComplex64Near(
   }
   return matchers;
 }
+#endif
 
 int SingleOpModel::AddInput(const TensorData& t, bool is_variable) {
   int id = 0;
@@ -180,7 +189,7 @@ void SingleOpModel::ApplyDelegate() {
   }
 }
 
-void SingleOpModel::Invoke() { ASSERT_EQ(interpreter_->Invoke(), kTfLiteOk); }
+void SingleOpModel::Invoke() { assert(interpreter_->Invoke() == kTfLiteOk); }
 
 TfLiteStatus SingleOpModel::InvokeUnchecked() { return interpreter_->Invoke(); }
 

@@ -28,6 +28,7 @@ float GetToleranceInt16(float min, float max) {
   return kQuantizedStep;
 }
 
+#if GOOGLE_TEST
 TEST(FloatAddOpModel, NoActivation) {
   FloatAddOpModel m({TensorType_FLOAT32, {1, 2, 2, 1}},
                     {TensorType_FLOAT32, {1, 2, 2, 1}},
@@ -358,6 +359,7 @@ TEST(QuantizedAddOpModel, QuantizedWithMixedBroadcastUInt8) {
 TEST(QuantizedAddOpModel, QuantizedWithMixedBroadcastInt8) {
   QuantizedWithMixedBroadcast<TensorType_INT8, int8_t>();
 }
+#endif
 
 }  // namespace
 }  // namespace tflite

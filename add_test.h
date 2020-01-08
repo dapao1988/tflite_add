@@ -9,15 +9,20 @@
 #ifndef SRC_ADD_TEST_H_
 #define SRC_ADD_TEST_H_
 
+#if GOOGLE_TEST
 #include <gtest/gtest.h>
+#endif
 #include "tensorflow/lite/interpreter.h"
 #include "tensorflow/lite/kernels/register.h"
-#include "tensorflow/lite/kernels/test_util.h"
+//#include "tensorflow/lite/kernels/test_util.h"
+#include "test_util.h"
 #include "tensorflow/lite/model.h"
 
 namespace tflite {
 namespace add {
+#if GOOGLE_TEST
 using ::testing::ElementsAreArray;
+#endif
 
 class BaseAddOpModel : public SingleOpModel {
  public:
@@ -46,6 +51,7 @@ class FloatAddOpModel : public BaseAddOpModel {
   using BaseAddOpModel::BaseAddOpModel;
 
   std::vector<float> GetOutput() { return ExtractVector<float>(output_); }
+  std::vector<float> GetInput(int index) { assert(index >=0 && index <output_); return ExtractVector<float>(index); }
 };
 
 class IntegerAddOpModel : public BaseAddOpModel {

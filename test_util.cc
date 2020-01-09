@@ -14,12 +14,12 @@ limitations under the License.
 ==============================================================================*/
 #if GOOGLE_TEST
 #include "tensorflow/lite/kernels/test_util.h"
+#include "tensorflow/core/platform/logging.h"
 #else
 #include "test_util.h"
 #include <assert.h>
 #endif
 
-#include "tensorflow/core/platform/logging.h"
 #include "tensorflow/lite/delegates/nnapi/nnapi_delegate.h"
 #include "tensorflow/lite/version.h"
 
@@ -167,8 +167,8 @@ void SingleOpModel::BuildInterpreter(std::vector<std::vector<int>> input_shapes,
 
   interpreter_->SetAllowFp16PrecisionForFp32(allow_fp32_relax_to_fp16);
 
-  CHECK(interpreter_->AllocateTensors() == kTfLiteOk)
-      << "Cannot allocate tensors";
+  CHECK(interpreter_->AllocateTensors() == kTfLiteOk);
+  //    << "Cannot allocate tensors";
   interpreter_->ResetVariableTensors();
 
   // In some rare cases a test may need to postpone modifying the graph with

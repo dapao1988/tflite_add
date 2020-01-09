@@ -21,7 +21,7 @@ limitations under the License.
 
 //#include <gmock/gmock.h>
 //#include <gtest/gtest.h>
-#include "tensorflow/core/platform/logging.h"
+//#include "tensorflow/core/platform/logging.h"
 #include "tensorflow/lite/interpreter.h"
 #include "tensorflow/lite/kernels/internal/tensor_utils.h"
 #include "tensorflow/lite/kernels/register.h"
@@ -32,6 +32,7 @@ limitations under the License.
 
 namespace tflite {
 
+#define CHECK(EXPRESSION) (EXPRESSION)
 #if GOOGLE_TEST
 // A gmock matcher that check that elements of a float vector match to a given
 // tolerance.
@@ -290,16 +291,16 @@ class SingleOpModel {
   template <typename T>
   void PopulateTensor(int index, const std::initializer_list<T>& data) {
     T* v = interpreter_->typed_tensor<T>(index);
-    if (!v) {
-      auto* t = interpreter_->tensor(index);
-      CHECK(t) << "No tensor with index " << index << ".";
-      CHECK(t->data.raw) << "Empty data for tensor with index " << index << ".";
-      CHECK_EQ(t->type, typeToTfLiteType<T>())
-          << "Type mismatch for tensor with index " << index << ". Requested "
-          << TfLiteTypeGetName(typeToTfLiteType<T>()) << ", got "
-          << TfLiteTypeGetName(t->type) << ".";
-      LOG(FATAL) << "Unknown tensor error.";
-    }
+    //if (!v) {
+    //  auto* t = interpreter_->tensor(index);
+    //  CHECK(t) << "No tensor with index " << index << ".";
+    //  CHECK(t->data.raw) << "Empty data for tensor with index " << index << ".";
+    //  CHECK_EQ(t->type, typeToTfLiteType<T>())
+    //      << "Type mismatch for tensor with index " << index << ". Requested "
+    //      << TfLiteTypeGetName(typeToTfLiteType<T>()) << ", got "
+    //      << TfLiteTypeGetName(t->type) << ".";
+    //  LOG(FATAL) << "Unknown tensor error.";
+    //}
     for (const T& f : data) {
       *v = f;
       ++v;
@@ -312,16 +313,16 @@ class SingleOpModel {
   template <typename T>
   void PopulateTensor(int index, const std::vector<T>& data) {
     T* v = interpreter_->typed_tensor<T>(index);
-    if (!v) {
-      auto* t = interpreter_->tensor(index);
-      CHECK(t) << "No tensor with index " << index << ".";
-      CHECK(t->data.raw) << "Empty data for tensor with index " << index << ".";
-      CHECK_EQ(t->type, typeToTfLiteType<T>())
-          << "Type mismatch for tensor with index " << index << ". Requested "
-          << TfLiteTypeGetName(typeToTfLiteType<T>()) << ", got "
-          << TfLiteTypeGetName(t->type) << ".";
-      LOG(FATAL) << "Unknown tensor error.";
-    }
+    //if (!v) {
+    //  auto* t = interpreter_->tensor(index);
+    //  CHECK(t) << "No tensor with index " << index << ".";
+    //  CHECK(t->data.raw) << "Empty data for tensor with index " << index << ".";
+    //  CHECK_EQ(t->type, typeToTfLiteType<T>())
+    //      << "Type mismatch for tensor with index " << index << ". Requested "
+    //      << TfLiteTypeGetName(typeToTfLiteType<T>()) << ", got "
+    //      << TfLiteTypeGetName(t->type) << ".";
+    //  LOG(FATAL) << "Unknown tensor error.";
+    //}
     for (const T& f : data) {
       *v = f;
       ++v;
@@ -339,7 +340,7 @@ class SingleOpModel {
   template <typename T>
   std::vector<T> ExtractVector(int index) const {
     const T* v = interpreter_->typed_tensor<T>(index);
-    CHECK(v);
+    //CHECK(v);
     return std::vector<T>(v, v + GetTensorSize(index));
   }
 
@@ -353,7 +354,7 @@ class SingleOpModel {
   }
 
   void SetNumThreads(int num_threads) {
-    CHECK(interpreter_ != nullptr);
+    //CHECK(interpreter_ != nullptr);
     interpreter_->SetNumThreads(num_threads);
   }
 
@@ -383,12 +384,12 @@ class SingleOpModel {
     const float qmax_double = qmax;
     // 0 should always be a representable value. Let's assume that the initial
     // min,max range contains 0.
-    CHECK_LE(f_min, 0);
-    CHECK_GE(f_max, 0);
+    //CHECK_LE(f_min, 0);
+    //CHECK_GE(f_max, 0);
     if (f_min == f_max) {
       // Special case where the min,max range is a point. Should be {0}.
-      CHECK_EQ(f_min, 0);
-      CHECK_EQ(f_max, 0);
+      //CHECK_EQ(f_min, 0);
+      //CHECK_EQ(f_max, 0);
       return {scale, zero_point};
     }
 
@@ -436,8 +437,8 @@ class SingleOpModel {
 
     // The zero point should always be in the range of quantized value,
     // // [qmin, qmax].
-    CHECK_GE(nudged_zero_point, qmin);
-    CHECK_LE(nudged_zero_point, qmax);
+    //CHECK_GE(nudged_zero_point, qmin);
+    //CHECK_LE(nudged_zero_point, qmax);
 
     zero_point = nudged_zero_point;
     // finally, return the values
@@ -488,7 +489,7 @@ class SingleOpModel {
           std::tie(t.scale, t.zero_point) =
               QuantizationParams<int16_t>(t.min, t.max);
         } else {
-          LOG(FATAL) << "No support for the requested quantized type";
+          //LOG(FATAL) << "No support for the requested quantized type";
         }
         t.min = 0;
         t.max = 0;

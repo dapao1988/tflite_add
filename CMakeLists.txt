@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-PROJECT(tflite_add)
+PROJECT(tflite_op_add_mul)
 MESSAGE(STATUS "project_name: " ${PROJECT_NAME})
 
 #SET(src_list add.cpp)
